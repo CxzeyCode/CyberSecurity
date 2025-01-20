@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Word Search</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(10, 40px);
+            justify-content: center;
+            gap: 5px;
+        }
+        .cell {
+            width: 40px;
+            height: 40px;
+            border: 1px solid black;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            cursor: pointer;
+            user-select: none;
+        }
+        .crossed {
+            background-color: lightgreen;
+            text-decoration: line-through;
+        }
+    </style>
+</head>
+<body>
+    <h1>Interactive Word Search</h1>
+    <p>Click on letters to cross them out. Find the words: CYBER, SAFE, DATA, ERROR  When done, remaining letters will spell a clue!</p>
+    <div id="grid" class="grid"></div>
+    <p id="message"></p>
+    <script>
+        const words = ["CYBER", "SAFE", "DATA", "ERROR",];
+        const gridSize = 10;
+        const wordGrid = [
+            ['C', 'X', 'Y', 'X', 'B', 'E', 'R', 'A', 'F', 'G'],
+            ['H', 'S', 'A', 'F', 'E', 'L', 'O', 'P', 'Q', 'R'],
+            ['D', 'A', 'T', 'A', 'M', 'N', 'R', 'O', 'R', 'S'],
+            ['V', 'X', 'X', 'Y', 'W', 'X', 'X', 'X', 'T', 'X'],
+            ['E', 'X', 'X', 'S', 'X', 'X', 'X', 'X', 'E', 'X'],
+            ['X', 'X', 'X', 'E', 'R', 'R', 'O', 'R', 'X', 'X'],
+            ['X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X'],
+            ['X', 'C', 'Y', 'B', 'E', 'R', 'X', 'X', 'X', 'X'],
+            ['X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X'],
+            ['P', 'I', 'C', 'K', 'E', 'R', 'X', 'X', 'X', 'X']
+        ];
+
+        const directions = [
+            [0, 1], [1, 0], [0, -1], [-1, 0], // Horizontal and Vertical
+            [1, 1], [1, -1], [-1, 1], [-1, -1] // Diagonal
+        ];
+
+        function createGrid() {
+            const grid = document.getElementById('grid');
+            grid.innerHTML = '';
+
+            for (let row = 0; row < gridSize; row++) {
+                for (let col = 0; col < gridSize; col++) {
+                    const cell = document.createElement('div');
+                    cell.classList.add('cell');
+                    cell.dataset.row = row;
+                    cell.dataset.col = col;
+                    cell.textContent = wordGrid[row][col];
+                    cell.addEventListener('click', () => toggleCross(cell));
+                    grid.appendChild(cell);
+                }
+            }
+        }
+
+        function toggleCross(cell) {
+            cell.classList.toggle('crossed');
+        }
+
+        function isWordCrossed(word) {
+            for (let row = 0; row < gridSize; row++) {
+                for (let col = 0; col < gridSize; col++) {
+                    for (let [dx, dy] of directions) {
+                        if (checkDirection(word, row, col, dx, dy)) {
+                            return true;
+                        }
+                    }
+                }
+            }
+            return false;
+        }
+
+        function checkDirection(word, startX, startY, dx, dy) {
+            let x = startX, y = startY;
+            for (let i = 0; i < word.length; i++) {
+                if (x < 0 || x >= gridSize || y < 0 || y >= gridSize) return false;
+
+                const cell = document.querySelector(`.cell[data-row='${x}'][data-col='${y}']`);
+                if (!cell || cell.textContent !== word[i] || !cell.classList.contains('crossed')) {
+                    return false;
+                }
+
+                x += dx;
+                y += dy;
+            }
+            return true;
+        }
+
+        function checkWin() {
+            const allFound = words.every(isWordCrossed);
+
+            if (allFound) {
+                document.getElementById('message').textContent = 'Congratulations! Look at the remaining letters for your clue: PICKER';
+            } else {
+                document.getElementById('message').textContent = 'Keep looking for the words!';
+            }
+        }
+
+        createGrid();
+
+        const checkButton = document.createElement('button');
+        checkButton.textContent = 'Check Words';
+        checkButton.addEventListener('click', checkWin);
+        document.body.appendChild(checkButton);
+    </script>
+</body>
+</html>

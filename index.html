@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crack the Code</title>
+    <style>
+        body {
+            background-color: white;
+            color: black;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+        }
+        h1 {
+            text-align: center;
+            color: green;
+        }
+        .container {
+            text-align: center;
+            margin-top: 50px;
+        }
+        input[type="text"] {
+            padding: 10px;
+            font-size: 16px;
+            width: 200px;
+            margin: 10px 0;
+            border: 2px solid green;
+            border-radius: 5px;
+        }
+        button {
+            background-color: green;
+            color: white;
+            padding: 10px 20px;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: darkgreen;
+        }
+        p.instructions {
+            margin-top: 20px;
+            text-align: center;
+            font-size: 18px;
+        }
+        .hidden-links {
+            position: relative;
+            height: 300px; /* Area where links are hidden */
+            margin: 30px auto;
+            border: 2px dashed green;
+        }
+        .hidden-links a {
+            position: absolute;
+            color: white; /* Blend into the background */
+            text-decoration: none;
+        }
+        .message {
+            font-size: 18px;
+            color: red;
+        }
+    </style>
+</head>
+<body>
+    <h1>Crack the Code</h1>
+    <div class="container">
+        <p class="instructions">
+            Welcome to "Crack the Code"! Enter the correct code below to proceed. <br>
+            Search for hidden links by hovering or clicking on the page to find clues.
+        </p>
+        <input type="text" id="codeInput" placeholder="Enter the code...">
+        <br>
+        <button onclick="validateCode()">Submit Code</button>
+        <p id="message" class="message"></p>
+    </div>
+
+    <!-- Hidden Links Area -->
+    <div class="hidden-links">
+        <a href="file:///C:/computer%20science/wordsearch.html" style="top: 20%; left: 15%;">Wordsearch</a>
+        <a href="file:///C:/computer%20science/lockgame.html" style="top: 50%; left: 60%;">Pick the Lock</a>
+        <a href="file:///C:/computer%20science/caesar_cipher.html" style="top: 80%; left: 40%;">Caesar Cipher</a>
+        <a href="file:///C:/computer%20science/hangman.html" style="top: 20%; left: 80%;">Hangman</a>
+    </div>
+
+    <script>
+        const correctCode = "FIREWALLLOCKPICKERGOAT36!"; // Replace with your desired code
+
+        function validateCode() {
+            const userInput = document.getElementById("codeInput").value;
+            const messageElement = document.getElementById("message");
+
+            if (userInput === correctCode) {
+                messageElement.style.color = "green";
+                messageElement.textContent = "Code correct! Well done, Game Master!";
+            } else {
+                messageElement.style.color = "red";
+                messageElement.textContent = "Incorrect code. Try again!";
+            }
+        }
+    </script>
+</body>
+</html>

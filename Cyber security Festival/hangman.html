@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hackman - Break the System</title>
+    <style>
+        body {
+            font-family: 'Courier New', monospace;
+            background-color: #000;
+            color: #0f0;
+            text-align: center;
+        }
+        h1 {
+            margin-top: 20px;
+        }
+        .container {
+            margin-top: 50px;
+        }
+        #word-display {
+            font-size: 30px;
+            margin: 20px 0;
+        }
+        #keyboard button {
+            margin: 5px;
+            padding: 10px 15px;
+            font-size: 18px;
+            background-color: #222;
+            color: #0f0;
+            border: 1px solid #0f0;
+            cursor: pointer;
+        }
+        #keyboard button:disabled {
+            background-color: #555;
+            color: #333;
+        }
+        #message {
+            margin-top: 30px;
+            font-size: 24px;
+            color: red;
+        }
+        canvas {
+            margin-top: 30px;
+            border: 2px solid #0f0;
+        }
+        button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            font-size: 18px;
+            background-color: #0f0;
+            color: #000;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #00ff00;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Hack the System</h1>
+        <p id="hint">Guess the secret password before the firewall locks you out.</p>
+        <div id="word-display"></div>
+        <div id="keyboard"></div>
+        <div id="message"></div>
+        <canvas id="hackmanCanvas" width="400" height="300"></canvas>
+        <button onclick="restartGame()">Restart</button>
+    </div>
+
+    <script>
+        const words = ["FIREWALL", "PASSWORD", "ENCRYPT", "HACKER", "MALWARE"];
+        let selectedWord = words[Math.floor(Math.random() * words.length)];
+        let guessedLetters = [];
+        let wrongGuesses = 0;
+        const maxGuesses = 6;
+
+        window.onload = function() {
+            createKeyboard();
+            displayWord();
+            drawCanvas();
+        };
+
+        function createKeyboard() {
+            const keyboardDiv = document.getElementById('keyboard');
+            const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+            for (let letter of alphabet) {
+                let btn = document.createElement('button');
+                btn.innerText = letter;
+                btn.onclick = () => handleGuess(letter, btn);
+                keyboardDiv.appendChild(btn);
+            }
+        }
+
+        function displayWord() {
+            let display = '';
+            for (let letter of selectedWord) {
+                if (guessedLetters.includes(letter)) {
+                    display += letter + ' ';
+                } else {
+                    display += '_ ';
+                }
+            }
+            document.getElementById('word-display').innerText = display.trim();
+        }
+
+        function handleGuess(letter, button) {
+            guessedLetters.push(letter);
+            button.disabled = true;
+
+            if (selectedWord.includes(letter)) {
+                displayWord();
+                checkWin();
+            } else {
+                wrongGuesses++;
+                drawHackman();
+                if (wrongGuesses >= maxGuesses) {
+                    gameOver();
+                }
+            }
+        }
+
+        function drawCanvas() {
+            const canvas = document.getElementById('hackmanCanvas');
+            const ctx = canvas.getContext('2d');
+            ctx.fillStyle = '#0f0';
+            ctx.fillRect(0, 0, 400, 300);
+        }
+
+        function drawHackman() {
+            const canvas = document.getElementById('hackmanCanvas');
+            const ctx = canvas.getContext('2d');
+            ctx.fillStyle = 'black';
+
+            switch (wrongGuesses) {
+                case 1:
+                    ctx.fillRect(50, 220, 30, 30);
+                    break;
+                case 2:
+                    ctx.fillRect(100, 190, 30, 60);
+                    break;
+                case 3:
+                    ctx.fillRect(150, 150, 30, 100);
+                    break;
+                case 4:
+                    ctx.fillRect(200, 100, 30, 150);
+                    break;
+                case 5:
+                    ctx.fillRect(250, 50, 30, 200);
+                    break;
+                case 6:
+                    ctx.fillRect(300, 20, 30, 250);
+                    setTimeout(() => {
+                        ctx.clearRect(0, 0, 400, 300);
+                        ctx.fillStyle = 'red';
+                        ctx.font = "30px Courier";
+                        ctx.fillText("SYSTEM FAILURE", 70, 150);
+                    }, 500);
+                    break;
+            }
+        }
+
+        function checkWin() {
+            if (!document.getElementById('word-display').innerText.includes('_')) {
+                document.getElementById('message').innerText = "Access Granted! The clue for the code is Firewall";
+                disableButtons();
+            }
+        }
+
+        function gameOver() {
+            document.getElementById('message').innerText = `System Locked! The word was ${selectedWord}`;
+            disableButtons();
+        }
+
+        function disableButtons() {
+            const buttons = document.querySelectorAll('#keyboard button');
+            buttons.forEach(btn => btn.disabled = true);
+        }
+
+        function restartGame() {
+            guessedLetters = [];
+            wrongGuesses = 0;
+            document.getElementById('message').innerText = "";
+            const buttons = document.querySelectorAll('#keyboard button');
+            buttons.forEach(btn => btn.disabled = false);
+            displayWord();
+            drawCanvas();
+        }
+    </script>
+</body>
+</html>

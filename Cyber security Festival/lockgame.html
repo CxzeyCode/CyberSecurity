@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lock Challenge</title>
+    <style>
+        body {
+            background-color: white;
+            color: black;
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 20px;
+        }
+        h1 {
+            color: green;
+        }
+        button {
+            background-color: green;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 10px;
+        }
+        button:hover {
+            background-color: darkgreen;
+        }
+        input {
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid black;
+            border-radius: 5px;
+        }
+        #hint {
+            margin-top: 20px;
+            color: red;
+            font-weight: bold;
+        }
+    </style>
+    <script>
+        const correctCode = "42356"; // The correct 5-digit code
+        let attempts = 0;
+
+        function checkLock() {
+            let code = document.getElementById('lockCode').value;
+            attempts++;
+
+            if (code === correctCode) {
+                alert('Correct! Your clue is: LOCK');
+            } else {
+                alert('Incorrect, try again.');
+
+                if (attempts % 5 === 0) {
+                    provideHint(code);
+                }
+            }
+        }
+
+        function provideHint(code) {
+            let hint = "Hint: Correct digits in correct positions: ";
+
+            for (let i = 0; i < correctCode.length; i++) {
+                if (code[i] === correctCode[i]) {
+                    hint += correctCode[i] + " ";
+                } else {
+                    hint += "_ ";
+                }
+            }
+
+            document.getElementById('hint').innerText = hint;
+        }
+    </script>
+</head>
+<body>
+    <h1>Pick the Lock</h1>
+    <p>Enter the correct 5-digit lock code to proceed. You will receive a hint after every 5 incorrect attempts!</p>
+    <input type="text" id="lockCode" maxlength="5" placeholder="Enter 5-digit code">
+    <button onclick="checkLock()">Submit</button>
+    <div id="hint"></div>
+</body>
+</html>
