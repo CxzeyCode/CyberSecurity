@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guess the Date</title>
+    <style>
+        body {
+            background-color: black;
+            color: green;
+            font-family: monospace;
+            text-align: center;
+            padding-top: 50px;
+        }
+        input, button {
+            background-color: black;
+            color: green;
+            border: 1px solid green;
+            font-size: 20px;
+            padding: 5px;
+        }
+        #message {
+            margin-top: 20px;
+            font-size: 24px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Guess Today's Date</h1>
+    <p>Enter the date in the format DD/MM/YY</p>
+    <input type="text" id="dateInput" placeholder="DD/MM/YY">
+    <button onclick="checkDate()">Submit</button>
+    <p id="message"></p>
+
+    <script>
+        function checkDate() {
+            const correctDate = "04/02/25"; // Today's date
+            let userInput = document.getElementById("dateInput").value;
+            let message = document.getElementById("message");
+            
+            if (userInput === correctDate) {
+                message.textContent = "Congratulations! You guessed the correct date.";
+            } else {
+                message.textContent = "Incorrect! Try again.";
+            }
+        }
+    </script>
+</body>
+</html>
